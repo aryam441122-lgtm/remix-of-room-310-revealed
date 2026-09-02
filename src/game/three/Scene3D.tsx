@@ -132,7 +132,7 @@ function Lamp({ position, color, intensity = 6, size = 0.09 }: {
 }) {
   return (
     <group position={position}>
-      <pointLight color={color} intensity={intensity} distance={9} decay={2} />
+      <pointLight color={color} intensity={intensity * 2.2} distance={9} decay={2} />
       <mesh>
         <sphereGeometry args={[size, 12, 12]} />
         <meshBasicMaterial color={color} toneMapped={false} />
@@ -596,8 +596,9 @@ export default function Scene3D({ place, shotIndex }: Scene3DProps) {
     >
       <color attach="background" args={[w.fog]} />
       <fog attach="fog" args={[w.fog, w.fogNear, w.fogFar]} />
-      <ambientLight intensity={w.ambient} color="#93a7c4" />
-      <hemisphereLight intensity={w.ambient * 0.6} color="#8fa6c8" groundColor="#1a1512" />
+      <ambientLight intensity={w.ambient * 2.6} color="#9db2cf" />
+      <hemisphereLight intensity={w.ambient * 1.8} color="#8fa6c8" groundColor="#241d18" />
+      <directionalLight position={[3, 6, 5]} intensity={0.55} color="#cddcf2" />
 
       <CameraRig shot={shot} shotKey={`${place}-${shotIndex}`} />
 
@@ -608,9 +609,9 @@ export default function Scene3D({ place, shotIndex }: Scene3DProps) {
       {w.rain && <Rain />}
 
       <EffectComposer>
-        <Bloom intensity={0.85} luminanceThreshold={0.35} luminanceSmoothing={0.5} mipmapBlur />
+        <Bloom intensity={0.7} luminanceThreshold={0.5} luminanceSmoothing={0.5} mipmapBlur />
         <Noise opacity={0.045} />
-        <Vignette eskil={false} offset={0.22} darkness={0.95} />
+        <Vignette eskil={false} offset={0.32} darkness={0.6} />
       </EffectComposer>
     </Canvas>
   );
