@@ -212,7 +212,7 @@ export function Room310Game() {
 
   const red = scene.mood === "red";
   const canTapAdvance = !!current && (stage === "lines" || stage === "afterInspect" || !!detail);
-  const showDialogue = !!current && stage !== "choices";
+  const showDialogue = !!current && stage !== "choices" && (stage !== "inspect" || !!detail);
   // كل سطر حوار = لقطة كاميرا جديدة، فتتحرك الأحداث أمام اللاعب بدل صورة مجمّدة
   const shotIndex =
     lineIdx +
@@ -257,10 +257,17 @@ export function Room310Game() {
       {/* نقاط الفحص */}
       {stage === "inspect" && !detail && (
         <>
-          <div className="absolute inset-x-0 top-24 z-20 px-6 text-center">
+          <div className="absolute inset-x-0 top-20 z-40 flex flex-col items-center gap-3 px-6 text-center">
             <p className="mx-auto max-w-md text-sm text-foreground/85">
               {scene.inspectPrompt ?? "افحص المكان."}
             </p>
+            <button
+              onClick={leaveInspect}
+              disabled={!sceneInspectDone}
+              className="btn-primary disabled:opacity-40"
+            >
+              {sceneInspectDone ? "اكتفيتُ بهذا" : "ما زال هناك ما لم تره"}
+            </button>
           </div>
           {scene.inspect?.map((pt) => {
             const key = `${scene.id}:${pt.id}`;
@@ -273,20 +280,16 @@ export function Room310Game() {
                   if (!seen && pt.effect) apply(pt.effect);
                   setDetail({ lines: visibleLines(pt.lines, story), idx: 0 });
                 }}
-                className={`hotspot ${seen ? "hotspot-seen" : ""}`}
+                className={`hotspot z-30 ${seen ? "hotspot-seen" : ""}`}
                 style={{ right: `${pt.x}%`, top: `${pt.y}%` }}
               >
                 <span className="hotspot-label">{pt.label}</span>
               </button>
             );
           })}
-          <div className="absolute inset-x-0 bottom-8 z-30 flex justify-center">
-            <button onClick={leaveInspect} disabled={!sceneInspectDone} className="btn-primary disabled:opacity-30">
-              {sceneInspectDone ? "اكتفيتُ بهذا" : "ما زال هناك ما لم تره"}
-            </button>
-          </div>
         </>
       )}
+
 
       {/* الحوار */}
       {showDialogue && current && (

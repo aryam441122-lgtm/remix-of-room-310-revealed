@@ -11,10 +11,10 @@ function Grade({ mood }: { mood?: string | undefined }) {
       style={{
         background:
           mood === "red"
-            ? "radial-gradient(circle at 50% 40%, rgba(255,60,45,0.16), rgba(10,3,4,0.5) 85%)"
+            ? "radial-gradient(circle at 50% 40%, rgba(255,60,45,0.16), rgba(12,4,5,0.4) 92%)"
             : mood === "warm"
-              ? "radial-gradient(circle at 50% 45%, rgba(255,206,140,0.12), rgba(12,9,6,0.42) 88%)"
-              : "radial-gradient(circle at 50% 45%, rgba(140,180,225,0.10), rgba(4,7,12,0.42) 88%)",
+              ? "radial-gradient(circle at 50% 45%, rgba(255,206,140,0.12), rgba(14,10,7,0.3) 94%)"
+              : "radial-gradient(circle at 50% 45%, rgba(140,180,225,0.10), rgba(5,8,13,0.3) 94%)",
       }}
     />
   );
