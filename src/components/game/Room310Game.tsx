@@ -289,7 +289,7 @@ export function Room310Game() {
       )}
 
       {/* الحوار */}
-      {current && (
+      {showDialogue && current && (
         <button
           onClick={canTapAdvance ? advance : undefined}
           className="absolute inset-x-0 bottom-0 z-30 w-full cursor-pointer p-4 text-right md:p-8"
@@ -326,14 +326,14 @@ export function Room310Game() {
         </button>
       )}
 
-      {/* الاختيارات */}
+      {/* الاختيارات — لوحة مستقلة لا تتداخل مع صندوق الحوار */}
       {stage === "choices" && !detail && (
-        <div className="absolute inset-x-0 bottom-0 z-40 max-h-[70dvh] overflow-y-auto p-4 md:p-8">
-          <div className="mx-auto max-w-2xl">
-            {scene.choicePrompt && (
-              <p className="mb-4 text-center text-sm text-muted-foreground">{scene.choicePrompt}</p>
-            )}
-            <div className="grid gap-2.5">
+        <div className="absolute inset-0 z-40 flex items-end justify-center overflow-y-auto bg-gradient-to-t from-black/85 via-black/45 to-transparent p-4 pb-6 md:items-center md:p-8">
+          <div className="mx-auto w-full max-w-2xl">
+            <p className="mb-5 text-center text-sm text-foreground/80">
+              {scene.choicePrompt ?? "ماذا تفعل؟"}
+            </p>
+            <div className="grid gap-3">
               {availableChoices.map((c) => (
                 <button key={c.id} onClick={() => pick(c)} className="choice">
                   <span>{c.text}</span>
@@ -344,6 +344,7 @@ export function Room310Game() {
           </div>
         </div>
       )}
+
 
       {runs > 1 && story.flags.loopCount > 0 && stage === "lines" && lineIdx === 0 && (
         <p className="absolute bottom-2 left-3 z-40 font-mono text-[0.65rem] text-primary/50">
