@@ -526,7 +526,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
         {Array.from({ length: 24 }).map((_, i) => (
           <mesh key={i} position={[0, 0.01, -i * 2.5]} rotation-x={-Math.PI / 2}>
             <planeGeometry args={[0.16, 1.4]} />
-            <meshStandardMaterial color="#c9c2ae" emissive="#8f8straight" emissiveIntensity={0} roughness={0.6} />
+            <meshStandardMaterial color="#c9c2ae" roughness={0.6} />
           </mesh>
         ))}
       </group>
