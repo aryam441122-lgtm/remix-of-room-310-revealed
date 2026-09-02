@@ -168,7 +168,9 @@ export function Character3D({
     if (blink.current < -0.12) blink.current = 2.4 + Math.random() * 3.2;
     const closed = blink.current < 0 ? 1 : 0;
     [lidL.current, lidR.current].forEach((l) => {
-      if (l) l.scale.y += (closed ? 1 : 0.06) - l.scale.y === 0 ? 0 : ((closed ? 1 : 0.06) - l.scale.y) * (1 - Math.exp(-18 * dt));
+      if (!l) return;
+      const want = closed ? 1 : 0.06;
+      l.scale.y += (want - l.scale.y) * (1 - Math.exp(-18 * dt));
     });
   });
 
