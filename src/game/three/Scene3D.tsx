@@ -77,9 +77,10 @@ function Rain({ count = 900, area = 26, height = 14 }: { count?: number; area?: 
     const arr = attr.array as Float32Array;
     const dt = Math.min(delta, 0.05);
     for (let i = 1; i < arr.length; i += 3) {
-      arr[i] -= dt * (9 + (i % 7));
-      if (arr[i]! < 0) arr[i] = height;
+      const next = (arr[i] ?? height) - dt * (9 + (i % 7));
+      arr[i] = next < 0 ? height : next;
     }
+
     attr.needsUpdate = true;
   });
 
