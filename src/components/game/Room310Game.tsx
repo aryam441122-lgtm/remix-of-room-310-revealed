@@ -211,34 +211,30 @@ export function Room310Game() {
 
   const red = scene.mood === "red";
   const canTapAdvance = !!current && (stage === "lines" || stage === "afterInspect" || !!detail);
+  const showDialogue = !!current && stage !== "choices";
+  // كل سطر حوار = لقطة كاميرا جديدة، فتتحرك الأحداث أمام اللاعب بدل صورة مجمّدة
+  const shotIndex =
+    lineIdx +
+    (detail ? 2 : 0) +
+    (stage === "afterInspect" ? 3 : 0) +
+    (stage === "inspect" ? 1 : 0) +
+    (stage === "choices" ? 4 : 0);
 
   return (
     <div
       className="film-grain relative h-dvh w-full overflow-hidden bg-black select-none"
       data-mood={scene.mood ?? "dark"}
     >
-      <img
-        key={scene.bg + (red ? "-red" : "")}
-        src={backgrounds[scene.bg] ?? backgrounds["room310"]}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full scale-105 object-cover transition-all duration-1000"
-        style={{
-          filter: red
-            ? "saturate(0.5) contrast(1.15) brightness(0.62) sepia(0.35) hue-rotate(-25deg)"
-            : scene.mood === "warm"
-              ? "saturate(0.9) contrast(1.05) brightness(0.78)"
-              : "saturate(0.75) contrast(1.08) brightness(0.7)",
-        }}
-      />
+      <Stage3D place={scene.bg} shotIndex={shotIndex} mood={scene.mood} />
       <div className="pointer-events-none absolute inset-0 vignette" />
       {(scene.mood === "rain" || scene.mood === "cold") && (
-        <div className="rain-layer pointer-events-none absolute inset-0 opacity-30" />
+        <div className="rain-layer pointer-events-none absolute inset-0 opacity-20" />
       )}
       {red && <div className="pointer-events-none absolute inset-0 emergency-pulse" />}
       {flash && <div className="pointer-events-none absolute inset-0 z-50 bg-black" />}
 
-      {current && <Portrait who={current.who} />}
+      {showDialogue && current && <Portrait who={current.who} />}
+
 
       {/* شريط علوي */}
       <header className="absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-4 md:p-6">
