@@ -4,7 +4,7 @@ import { backgrounds } from "@/game/assets";
 
 const Scene3D = lazy(() => import("@/game/three/Scene3D"));
 
-function Grade({ mood }: { mood?: string }) {
+function Grade({ mood }: { mood?: string | undefined }) {
   return (
     <div
       className="pointer-events-none absolute inset-0"
@@ -42,7 +42,7 @@ export function Stage3D({
 }: {
   place: string;
   shotIndex: number;
-  mood?: string;
+  mood?: string | undefined;
 }) {
   return (
     <div className="absolute inset-0">
