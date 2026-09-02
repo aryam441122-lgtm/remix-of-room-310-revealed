@@ -5,6 +5,7 @@ import { useGame } from "@/game/store";
 import { getScene } from "@/game/story";
 import type { Choice, Line, Scene, StoryState } from "@/game/types";
 import { CaseFile } from "./CaseFile";
+import { Stage3D } from "./Stage3D";
 import { TitleSequence } from "./TitleSequence";
 
 type Stage = "lines" | "inspect" | "afterInspect" | "choices" | "done";
@@ -211,34 +212,30 @@ export function Room310Game() {
 
   const red = scene.mood === "red";
   const canTapAdvance = !!current && (stage === "lines" || stage === "afterInspect" || !!detail);
+  const showDialogue = !!current && stage !== "choices";
+  // كل سطر حوار = لقطة كاميرا جديدة، فتتحرك الأحداث أمام اللاعب بدل صورة مجمّدة
+  const shotIndex =
+    lineIdx +
+    (detail ? 2 : 0) +
+    (stage === "afterInspect" ? 3 : 0) +
+    (stage === "inspect" ? 1 : 0) +
+    (stage === "choices" ? 4 : 0);
 
   return (
     <div
       className="film-grain relative h-dvh w-full overflow-hidden bg-black select-none"
       data-mood={scene.mood ?? "dark"}
     >
-      <img
-        key={scene.bg + (red ? "-red" : "")}
-        src={backgrounds[scene.bg] ?? backgrounds["room310"]}
-        alt=""
-        aria-hidden
-        className="absolute inset-0 h-full w-full scale-105 object-cover transition-all duration-1000"
-        style={{
-          filter: red
-            ? "saturate(0.5) contrast(1.15) brightness(0.62) sepia(0.35) hue-rotate(-25deg)"
-            : scene.mood === "warm"
-              ? "saturate(0.9) contrast(1.05) brightness(0.78)"
-              : "saturate(0.75) contrast(1.08) brightness(0.7)",
-        }}
-      />
+      <Stage3D place={scene.bg} shotIndex={shotIndex} mood={scene.mood} />
       <div className="pointer-events-none absolute inset-0 vignette" />
       {(scene.mood === "rain" || scene.mood === "cold") && (
-        <div className="rain-layer pointer-events-none absolute inset-0 opacity-30" />
+        <div className="rain-layer pointer-events-none absolute inset-0 opacity-20" />
       )}
       {red && <div className="pointer-events-none absolute inset-0 emergency-pulse" />}
       {flash && <div className="pointer-events-none absolute inset-0 z-50 bg-black" />}
 
-      {current && <Portrait who={current.who} />}
+      {showDialogue && current && <Portrait who={current.who} />}
+
 
       {/* شريط علوي */}
       <header className="absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-3 p-4 md:p-6">
@@ -292,7 +289,7 @@ export function Room310Game() {
       )}
 
       {/* الحوار */}
-      {current && (
+      {showDialogue && current && (
         <button
           onClick={canTapAdvance ? advance : undefined}
           className="absolute inset-x-0 bottom-0 z-30 w-full cursor-pointer p-4 text-right md:p-8"
@@ -329,14 +326,14 @@ export function Room310Game() {
         </button>
       )}
 
-      {/* الاختيارات */}
+      {/* الاختيارات — لوحة مستقلة لا تتداخل مع صندوق الحوار */}
       {stage === "choices" && !detail && (
-        <div className="absolute inset-x-0 bottom-0 z-40 max-h-[70dvh] overflow-y-auto p-4 md:p-8">
-          <div className="mx-auto max-w-2xl">
-            {scene.choicePrompt && (
-              <p className="mb-4 text-center text-sm text-muted-foreground">{scene.choicePrompt}</p>
-            )}
-            <div className="grid gap-2.5">
+        <div className="absolute inset-0 z-40 flex items-end justify-center overflow-y-auto bg-gradient-to-t from-black/85 via-black/45 to-transparent p-4 pb-6 md:items-center md:p-8">
+          <div className="mx-auto w-full max-w-2xl">
+            <p className="mb-5 text-center text-sm text-foreground/80">
+              {scene.choicePrompt ?? "ماذا تفعل؟"}
+            </p>
+            <div className="grid gap-3">
               {availableChoices.map((c) => (
                 <button key={c.id} onClick={() => pick(c)} className="choice">
                   <span>{c.text}</span>
@@ -347,6 +344,7 @@ export function Room310Game() {
           </div>
         </div>
       )}
+
 
       {runs > 1 && story.flags.loopCount > 0 && stage === "lines" && lineIdx === 0 && (
         <p className="absolute bottom-2 left-3 z-40 font-mono text-[0.65rem] text-primary/50">

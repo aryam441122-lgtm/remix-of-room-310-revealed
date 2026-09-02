@@ -77,9 +77,10 @@ function Rain({ count = 900, area = 26, height = 14 }: { count?: number; area?: 
     const arr = attr.array as Float32Array;
     const dt = Math.min(delta, 0.05);
     for (let i = 1; i < arr.length; i += 3) {
-      arr[i] -= dt * (9 + (i % 7));
-      if (arr[i]! < 0) arr[i] = height;
+      const next = (arr[i] ?? height) - dt * (9 + (i % 7));
+      arr[i] = next < 0 ? height : next;
     }
+
     attr.needsUpdate = true;
   });
 
@@ -131,7 +132,7 @@ function Lamp({ position, color, intensity = 6, size = 0.09 }: {
 }) {
   return (
     <group position={position}>
-      <pointLight color={color} intensity={intensity} distance={9} decay={2} />
+      <pointLight color={color} intensity={intensity * 2.2} distance={9} decay={2} />
       <mesh>
         <sphereGeometry args={[size, 12, 12]} />
         <meshBasicMaterial color={color} toneMapped={false} />
@@ -525,7 +526,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
         {Array.from({ length: 24 }).map((_, i) => (
           <mesh key={i} position={[0, 0.01, -i * 2.5]} rotation-x={-Math.PI / 2}>
             <planeGeometry args={[0.16, 1.4]} />
-            <meshStandardMaterial color="#c9c2ae" emissive="#8f8straight" emissiveIntensity={0} roughness={0.6} />
+            <meshStandardMaterial color="#c9c2ae" roughness={0.6} />
           </mesh>
         ))}
       </group>
@@ -595,8 +596,9 @@ export default function Scene3D({ place, shotIndex }: Scene3DProps) {
     >
       <color attach="background" args={[w.fog]} />
       <fog attach="fog" args={[w.fog, w.fogNear, w.fogFar]} />
-      <ambientLight intensity={w.ambient} color="#93a7c4" />
-      <hemisphereLight intensity={w.ambient * 0.6} color="#8fa6c8" groundColor="#1a1512" />
+      <ambientLight intensity={w.ambient * 2.6} color="#9db2cf" />
+      <hemisphereLight intensity={w.ambient * 1.8} color="#8fa6c8" groundColor="#241d18" />
+      <directionalLight position={[3, 6, 5]} intensity={0.55} color="#cddcf2" />
 
       <CameraRig shot={shot} shotKey={`${place}-${shotIndex}`} />
 
@@ -607,9 +609,9 @@ export default function Scene3D({ place, shotIndex }: Scene3DProps) {
       {w.rain && <Rain />}
 
       <EffectComposer>
-        <Bloom intensity={0.85} luminanceThreshold={0.35} luminanceSmoothing={0.5} mipmapBlur />
+        <Bloom intensity={0.7} luminanceThreshold={0.5} luminanceSmoothing={0.5} mipmapBlur />
         <Noise opacity={0.045} />
-        <Vignette eskil={false} offset={0.22} darkness={0.95} />
+        <Vignette eskil={false} offset={0.32} darkness={0.6} />
       </EffectComposer>
     </Canvas>
   );
