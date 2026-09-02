@@ -323,7 +323,7 @@ export function Character3D({
           )}
           {look.beard && (
             <mesh position={[0, -0.058, 0.045]} scale={[0.95, 0.8, 0.85]} material={hairMat}>
-              <sphereGeometry args={[0.072, 18, 18, 0, Math.PI * 2, Math.PI * 0.52, Math.PI * 0.48)} />
+              <sphereGeometry args={[0.072, 18, 18, 0, Math.PI * 2, Math.PI * 0.52, Math.PI * 0.48]} />
             </mesh>
           )}
           {look.glasses && (
