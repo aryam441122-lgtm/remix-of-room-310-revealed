@@ -320,8 +320,8 @@ body {
   position: absolute;
   z-index: 25;
   translate: 50% -50%;
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.35rem;
+  height: 1.35rem;
   border-radius: 999px;
   border: 1px solid color-mix(in oklab, var(--primary) 80%, transparent);
   background: color-mix(in oklab, var(--primary) 30%, transparent);
@@ -352,7 +352,7 @@ body {
   padding: 0.15rem 0.5rem;
   font-size: 0.7rem;
   color: var(--color-foreground);
-  opacity: 0;
+  opacity: 0.75;
   transition: opacity 0.2s ease;
 }
 

@@ -10,6 +10,16 @@ import { getWorld, type Shot, type WorldDef } from "./world";
 /* كاميرا سينمائية: تنتقل بين اللقطات مع دوللي واهتزاز محمول          */
 /* ------------------------------------------------------------------ */
 
+/** ضوء ملاصق للكاميرا يمنع اللقطات المظلمة تماماً */
+function CameraFill({ color, intensity }: { color: string; intensity: number }) {
+  const ref = useRef<THREE.PointLight>(null);
+  const { camera } = useThree();
+  useFrame(() => {
+    ref.current?.position.copy(camera.position);
+  });
+  return <pointLight ref={ref} color={color} intensity={intensity} distance={22} decay={1.3} />;
+}
+
 function CameraRig({ shot, shotKey }: { shot: Shot; shotKey: string }) {
   const { camera } = useThree();
   const t = useRef(0);
@@ -132,7 +142,7 @@ function Lamp({ position, color, intensity = 6, size = 0.09 }: {
 }) {
   return (
     <group position={position}>
-      <pointLight color={color} intensity={intensity * 2.2} distance={9} decay={2} />
+      <pointLight color={color} intensity={intensity * 24} distance={14} decay={2} />
       <mesh>
         <sphereGeometry args={[size, 12, 12]} />
         <meshBasicMaterial color={color} toneMapped={false} />
@@ -208,7 +218,7 @@ function RoomWorld({ w }: { w: WorldDef }) {
       <Lamp position={[-3.2, 1.05, -3.5]} color={w.accent} intensity={5} />
       <Lamp position={[3.6, 0.95, -3.7]} color="#ffce8a" intensity={3.5} size={0.07} />
       <group position={[0, 2.5, -0.5]}>
-        <pointLight ref={flick} color={w.accent} intensity={5} distance={12} decay={2} castShadow />
+        <pointLight ref={flick} color={w.accent} intensity={110.0} distance={12} decay={2} castShadow />
         <mesh>
           <sphereGeometry args={[0.14, 14, 14]} />
           <meshBasicMaterial color={w.accent} toneMapped={false} />
@@ -221,6 +231,11 @@ function RoomWorld({ w }: { w: WorldDef }) {
         <sphereGeometry args={[0.05, 10, 10]} />
         <meshStandardMaterial color="#c9a227" metalness={0.9} roughness={0.25} />
       </mesh>
+
+      {/* خزانة وتلفاز وحقيبة على الجهة المقابلة */}
+      <Box position={[-3.1, 0.9, 2.6]} size={[1.8, 1.8, 0.6]} color="#2b2118" rough={0.75} />
+      <Box position={[-1.2, 1.5, 2.9]} size={[1.6, 0.9, 0.08]} color="#0d0f12" rough={0.3} metal={0.4} />
+      <Box position={[0.9, 0.25, 3.4]} size={[0.7, 0.5, 0.35]} color="#241f1c" rough={0.9} />
 
       {/* مرآة / لوحة */}
       <Box position={[4.35, 1.7, 1.6]} size={[0.05, 1.1, 1.6]} color="#3c3f47" rough={0.2} metal={0.7} />
@@ -318,7 +333,7 @@ function HallWorld({ w }: { w: WorldDef }) {
       {/* ثريّات */}
       {[[-4, 4.8, 2], [4, 4.8, -2], [0, 5.2, 6]].map((p, i) => (
         <group key={i} position={p as [number, number, number]}>
-          <pointLight color={w.accent} intensity={26} distance={26} decay={2} castShadow />
+          <pointLight color={w.accent} intensity={572.0} distance={26} decay={2} castShadow />
           {Array.from({ length: 10 }).map((_, k) => {
             const a = (k / 10) * Math.PI * 2;
             return (
@@ -438,7 +453,7 @@ function BasementWorld({ w }: { w: WorldDef }) {
           <cylinderGeometry args={[0.008, 0.008, 0.7, 6]} />
           <meshBasicMaterial color="#3a3a3a" />
         </mesh>
-        <pointLight position={[0, -0.72, 0]} color={w.accent} intensity={5} distance={11} decay={2} castShadow />
+        <pointLight position={[0, -0.72, 0]} color={w.accent} intensity={110.0} distance={11} decay={2} castShadow />
         <mesh position={[0, -0.72, 0]}>
           <sphereGeometry args={[0.08, 12, 12]} />
           <meshBasicMaterial color="#ffd9a0" toneMapped={false} />
@@ -590,15 +605,16 @@ export default function Scene3D({ place, shotIndex }: Scene3DProps) {
     <Canvas
       shadows
       dpr={[1, 1.6]}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
+      gl={{ antialias: true, powerPreference: "high-performance", toneMappingExposure: 1.15 }}
       camera={{ position: shot.pos, fov: shot.fov ?? 44, near: 0.1, far: 300 }}
       className="absolute inset-0"
     >
       <color attach="background" args={[w.fog]} />
-      <fog attach="fog" args={[w.fog, w.fogNear, w.fogFar]} />
-      <ambientLight intensity={w.ambient * 2.6} color="#9db2cf" />
-      <hemisphereLight intensity={w.ambient * 1.8} color="#8fa6c8" groundColor="#241d18" />
-      <directionalLight position={[3, 6, 5]} intensity={0.55} color="#cddcf2" />
+      <fog attach="fog" args={[w.fog, w.fogNear * 2.2, w.fogFar * 2.2]} />
+      <ambientLight intensity={w.ambient * 3.4} color="#aec1da" />
+      <CameraFill color="#d6e0ee" intensity={32} />
+      <hemisphereLight intensity={w.ambient * 2.6} color="#8fa6c8" groundColor="#241d18" />
+      <directionalLight position={[3, 6, 5]} intensity={1.4} color="#cddcf2" />
 
       <CameraRig shot={shot} shotKey={`${place}-${shotIndex}`} />
 
