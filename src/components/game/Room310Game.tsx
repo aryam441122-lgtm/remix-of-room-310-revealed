@@ -5,6 +5,7 @@ import { useGame } from "@/game/store";
 import { getScene } from "@/game/story";
 import type { Choice, Line, Scene, StoryState } from "@/game/types";
 import { CaseFile } from "./CaseFile";
+import { Stage3D } from "./Stage3D";
 import { TitleSequence } from "./TitleSequence";
 
 type Stage = "lines" | "inspect" | "afterInspect" | "choices" | "done";
