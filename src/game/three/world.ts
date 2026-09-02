@@ -137,7 +137,7 @@ export const worlds: Record<string, WorldDef> = {
     shots: [
       { pos: [0, 2, 13], target: [0, 2.2, -6], drift: [0, 0, -3], fov: 48, handheld: 0.5 },
       { pos: [-5, 1.7, 4], target: [4, 2, -5], drift: [1.5, 0, 0], fov: 42 },
-      { pos: [4.5, 3.4, 2], target: [-2, 1, -4], drift: [-1, -0.4, 0], fov: 52 },
+      { pos: [4.5, 2.2, 2], target: [-3, 2.1, -5], drift: [-1, 0, -0.5], fov: 48 },
       { pos: [0.5, 1.5, -2], target: [-4, 2.4, 9], drift: [0, 0.2, 1.5], handheld: 0.8 },
     ],
   },
@@ -154,7 +154,7 @@ export const worlds: Record<string, WorldDef> = {
     shots: [
       { pos: [0, 2.4, 15], target: [0, 2.6, -8], drift: [0, 0, -4], fov: 50 },
       { pos: [-6, 2, 6], target: [5, 2.4, -6], drift: [2, 0, 0], fov: 44 },
-      { pos: [0, 5.5, 3], target: [0, 0.5, -5], drift: [0, -1, 0], fov: 58 },
+      { pos: [0, 2.6, 3], target: [0, 2.4, -6], drift: [0, 0, -1.5], fov: 52 },
     ],
   },
   security: {
