@@ -225,10 +225,10 @@ export function Room310Game() {
         className="absolute inset-0 h-full w-full scale-105 object-cover transition-all duration-1000"
         style={{
           filter: red
-            ? "saturate(0.5) contrast(1.15) brightness(0.5) sepia(0.35) hue-rotate(-25deg)"
+            ? "saturate(0.5) contrast(1.15) brightness(0.62) sepia(0.35) hue-rotate(-25deg)"
             : scene.mood === "warm"
-              ? "saturate(0.9) contrast(1.05) brightness(0.62)"
-              : "saturate(0.75) contrast(1.1) brightness(0.5)",
+              ? "saturate(0.9) contrast(1.05) brightness(0.78)"
+              : "saturate(0.75) contrast(1.08) brightness(0.7)",
         }}
       />
       <div className="pointer-events-none absolute inset-0 vignette" />
