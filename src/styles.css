@@ -142,3 +142,221 @@
     color: var(--color-foreground);
   }
 }
+
+/* ================= الغرفة ٣١٠ — نظام التصميم السينمائي ================= */
+
+@theme inline {
+  --font-sans: "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-display: "Noto Kufi Arabic", "IBM Plex Sans Arabic", serif;
+}
+
+:root {
+  --background: oklch(0.13 0.012 265);
+  --foreground: oklch(0.93 0.008 90);
+  --card: oklch(0.17 0.014 265);
+  --card-foreground: oklch(0.93 0.008 90);
+  --popover: oklch(0.17 0.014 265);
+  --popover-foreground: oklch(0.93 0.008 90);
+  --primary: oklch(0.74 0.115 78);
+  --primary-foreground: oklch(0.15 0.02 60);
+  --secondary: oklch(0.24 0.018 265);
+  --secondary-foreground: oklch(0.93 0.008 90);
+  --muted: oklch(0.22 0.014 265);
+  --muted-foreground: oklch(0.68 0.015 250);
+  --accent: oklch(0.45 0.11 25);
+  --accent-foreground: oklch(0.96 0.01 80);
+  --destructive: oklch(0.52 0.19 26);
+  --destructive-foreground: oklch(0.96 0.01 80);
+  --border: oklch(0.32 0.015 260);
+  --input: oklch(0.3 0.015 260);
+  --ring: oklch(0.74 0.115 78);
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.vignette {
+  background: radial-gradient(
+      ellipse at 50% 45%,
+      transparent 30%,
+      color-mix(in oklab, var(--background) 70%, transparent) 78%,
+      var(--background) 118%
+    ),
+    linear-gradient(to top, color-mix(in oklab, var(--background) 92%, transparent) 0%, transparent 55%);
+}
+
+.film-grain::after {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>");
+  animation: grain 0.7s steps(4) infinite;
+}
+
+@keyframes grain {
+  0% { transform: translate(0, 0); }
+  25% { transform: translate(-3%, 2%); }
+  50% { transform: translate(2%, -3%); }
+  75% { transform: translate(-2%, -2%); }
+  100% { transform: translate(3%, 1%); }
+}
+
+.rain-layer {
+  background-image: repeating-linear-gradient(
+    100deg,
+    transparent 0 7px,
+    color-mix(in oklab, var(--foreground) 22%, transparent) 7px 8px,
+    transparent 8px 22px
+  );
+  background-size: 100% 220px;
+  animation: rainfall 0.75s linear infinite;
+}
+
+@keyframes rainfall {
+  to { background-position: -40px 220px; }
+}
+
+.emergency-pulse {
+  background: radial-gradient(ellipse at 50% 0%, oklch(0.5 0.2 26 / 0.35), transparent 65%);
+  animation: emergency 2.6s ease-in-out infinite;
+}
+
+@keyframes emergency {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.85; }
+}
+
+.dialogue {
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in oklab, var(--border) 70%, transparent);
+  background: linear-gradient(
+    to top,
+    color-mix(in oklab, var(--background) 94%, transparent),
+    color-mix(in oklab, var(--background) 72%, transparent)
+  );
+  padding: 1.25rem 1.5rem;
+  backdrop-filter: blur(10px);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+.shake {
+  animation: rise 0.4s both, shudder 0.5s ease-in-out 0.1s;
+}
+
+@keyframes shudder {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+.choice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+  background: color-mix(in oklab, var(--card) 78%, transparent);
+  padding: 0.9rem 1.1rem;
+  text-align: right;
+  font-size: 0.98rem;
+  color: var(--color-foreground);
+  backdrop-filter: blur(10px);
+  transition: all 0.22s ease;
+  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.choice:hover {
+  border-color: var(--color-primary);
+  background: color-mix(in oklab, var(--card) 95%, var(--primary) 8%);
+  transform: translateX(-4px);
+}
+
+.btn-primary,
+.btn-ghost {
+  border-radius: var(--radius-md);
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.btn-ghost {
+  border: 1px solid color-mix(in oklab, var(--border) 85%, transparent);
+  background: color-mix(in oklab, var(--card) 55%, transparent);
+  color: var(--color-foreground);
+}
+
+.btn-ghost:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.hotspot {
+  position: absolute;
+  z-index: 25;
+  translate: 50% -50%;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in oklab, var(--primary) 80%, transparent);
+  background: color-mix(in oklab, var(--primary) 30%, transparent);
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 55%, transparent);
+  animation: ping 2.4s ease-out infinite;
+}
+
+.hotspot-seen {
+  border-color: color-mix(in oklab, var(--muted-foreground) 80%, transparent);
+  background: color-mix(in oklab, var(--muted-foreground) 22%, transparent);
+  animation: none;
+}
+
+@keyframes ping {
+  0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 50%, transparent); }
+  70% { box-shadow: 0 0 0 14px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+
+.hotspot-label {
+  position: absolute;
+  top: 130%;
+  right: 50%;
+  translate: 50% 0;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--background) 88%, transparent);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.7rem;
+  color: var(--color-foreground);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.hotspot:hover .hotspot-label,
+.hotspot:focus-visible .hotspot-label {
+  opacity: 1;
+}
