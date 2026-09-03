@@ -284,16 +284,25 @@ function RoomWorld({ w }: { w: WorldDef }) {
         />
       ))}
 
-      {/* نافذة على المدينة */}
+      {/* نافذة مفتوحة على مدينة مجسّمة حقيقية خارج المبنى */}
       <group>
-        <CityView
-          size={[3.4, 1.9]}
-          position={[-4.36, 1.6, -1.4]}
-          rotation={[0, Math.PI / 2, 0]}
-          intensity={0.85}
+        <City3D
           seed={w.vista === "room310b" ? 12 : 7}
+          count={22}
+          spread={90}
+          depth={130}
+          minH={10}
+          maxH={44}
+          position={[-9, -6, -1.4]}
+          rotation={Math.PI / 2}
         />
+        {/* زجاج النافذة */}
+        <mesh position={[-4.42, 1.6, -1.4]} rotation-y={Math.PI / 2}>
+          <planeGeometry args={[2.8, 1.6]} />
+          <meshPhysicalMaterial color="#0e161e" transparent opacity={0.18} roughness={0.05} />
+        </mesh>
         <Surf position={[-4.3, 1.6, -1.4]} size={[0.05, 2.05, 0.07]} tex="metal" tint="#20242a" repeat={[1, 2]} />
+
         <Surf position={[-4.3, 0.55, -1.4]} size={[0.14, 0.1, 3.6]} tex="darkwood" repeat={[3, 1]} />
         <rectAreaLight
           position={[-4.2, 1.6, -1.4]}
