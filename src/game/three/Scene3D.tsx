@@ -431,15 +431,30 @@ function HallWorld({ w }: { w: WorldDef }) {
         rotation={[Math.PI / 2, 0, 0]}
         repeat={[8, 12]}
       />
-      <Surf position={[0, 3.5, -12]} size={[24, 7, 0.4]} tex="marble" tint={w.wall} repeat={[8, 3]} />
+      {/* الجدار الأمامي مقسّم حول واجهة زجاجية تُرى منها المدينة المجسّمة */}
+      <Surf position={[-9.75, 3.5, -12]} size={[4.5, 7, 0.4]} tex="marble" tint={w.wall} repeat={[2, 3]} />
+      <Surf position={[9.75, 3.5, -12]} size={[4.5, 7, 0.4]} tex="marble" tint={w.wall} repeat={[2, 3]} />
+      <Surf position={[0, 0.45, -12]} size={[15, 0.9, 0.4]} tex="marble" tint={w.wall} repeat={[6, 1]} />
+      <Surf position={[0, 6.65, -12]} size={[15, 0.7, 0.4]} tex="marble" tint={w.wall} repeat={[6, 1]} />
       <Surf position={[-11.8, 3.5, 0]} size={[0.4, 7, 40]} tex="marble" tint={w.wall} repeat={[12, 3]} />
       <Surf position={[11.8, 3.5, 0]} size={[0.4, 7, 40]} tex="marble" tint={w.wall} repeat={[12, 3]} />
 
-      {/* واجهة زجاجية على المدينة بدل صورة معلّقة */}
-      <CityView size={[15, 5.4]} position={[0, 3.6, -11.72]} intensity={0.8} seed={21} />
+      {/* زجاج الواجهة + المدينة الحقيقية خلفه */}
+      <mesh position={[0, 3.6, -11.9]}>
+        <planeGeometry args={[15, 5.4]} />
+        <meshPhysicalMaterial
+          color="#0d151d"
+          transparent
+          opacity={0.22}
+          roughness={0.05}
+          metalness={0.1}
+        />
+      </mesh>
+      <City3D seed={21} count={26} spread={120} depth={150} minH={10} maxH={48} position={[0, 0, -20]} />
       {[-5, 0, 5].map((x) => (
-        <Surf key={x} position={[x, 3.6, -11.66]} size={[0.12, 5.6, 0.1]} tex="metal" tint="#1b1f26" repeat={[1, 3]} />
+        <Surf key={x} position={[x, 3.6, -11.86]} size={[0.12, 5.6, 0.1]} tex="metal" tint="#1b1f26" repeat={[1, 3]} />
       ))}
+
 
       {cols.map((x) =>
         [-6, 0, 6].map((z) => (
