@@ -613,7 +613,7 @@ function RooftopWorld({ w }: { w: WorldDef }) {
       <Surf position={[-2.5, 0.45, 7]} size={[1.6, 0.9, 1.6]} tex="metal" tint="#3a4149" repeat={[2, 2]} />
 
       {/* مدينة مجسّمة: مبانٍ حقيقية بواجهات لكل اتجاه، بلا صور مسطّحة */}
-      <City3D seed={33} count={34} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
+      <City3D seed={33} count={26} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
 
       <directionalLight position={[-10, 18, -8]} intensity={0.5} color="#8fb0ff" />
     </group>
@@ -636,7 +636,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
   });
   return (
     <group>
-      <Plane size={[26, 140]} tex="asphalt" tint={w.floor} repeat={[14, 70]} roughness={0.42} metalness={0.3} />
+      <Plane size={[26, 140]} tex="asphalt" tint={w.floor} repeat={[10, 52]} roughness={0.58} metalness={0.12} />
       <group ref={road}>
         {Array.from({ length: 24 }).map((_, i) => (
           <mesh key={i} position={[0, 0.01, -i * 2.5]} rotation-x={-Math.PI / 2}>
@@ -656,7 +656,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
         ))}
       </group>
       {/* مدينة مجسّمة حقيقية على جانبي الطريق */}
-      <City3D seed={5} count={30} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
+      <City3D seed={5} count={22} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
       {/* سيارة أخرى تسير في المسار المقابل */}
       <Car3D position={[-5.2, 0, -26]} rotation={Math.PI} color="#2a2f36" spin />
       {/* داخل السيارة: مقصورة كاملة */}
