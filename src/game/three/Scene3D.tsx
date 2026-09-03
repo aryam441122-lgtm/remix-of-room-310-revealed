@@ -681,10 +681,13 @@ function DriveWorld({ w }: { w: WorldDef }) {
           </group>
         ))}
       </group>
-      <CityView size={[60, 22]} position={[0, 7, -46]} intensity={0.6} seed={5} />
-      {/* داخل السيارة: طبلون جلد */}
-      <Surf position={[0, 0.72, 1.3]} size={[3.2, 0.5, 1]} tex="leather" tint="#171a1f" repeat={[4, 1]} />
-      <Lamp position={[0.6, 0.95, 1.2]} color="#66e0c0" intensity={1.2} size={0.03} />
+      {/* مدينة مجسّمة حقيقية على جانبي الطريق */}
+      <City3D seed={5} count={30} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
+      {/* سيارة أخرى تسير في المسار المقابل */}
+      <Car3D position={[-5.2, 0, -26]} rotation={Math.PI} color="#2a2f36" spin />
+      {/* داخل السيارة: مقصورة كاملة */}
+      <CarInterior />
+
     </group>
   );
 }
