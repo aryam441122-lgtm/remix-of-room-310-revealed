@@ -95,72 +95,80 @@ function buildFacade(style: FacadeStyle, seed: number): FacadeMaps {
   e.fillStyle = "#000000";
   e.fillRect(0, 0, S, S);
 
-  // بلاطة الطابق: شريط سفلي بارز يلتقي مع أعلى البلاطة المجاورة
-  const slab = Math.round(S * 0.14);
-  b.fillStyle = wallDark;
-  b.fillRect(0, S - slab, S, slab);
-  b.fillStyle = "rgba(255,255,255,0.06)";
-  b.fillRect(0, S - slab, S, 3);
-  hh.fillStyle = "#c8c8c8";
-  hh.fillRect(0, S - slab, S, slab);
-  r.fillStyle = "#cccccc";
-  r.fillRect(0, S - slab, S, slab);
+  // البلاطة تُرسم داخل كل خلية حتى تبقى الشبكة مستمرة رأسياً
+  const GRID = 3; // 3×3 وحدات في التكستر — كل نافذة بحالة إضاءة مختلفة
+  const CS = S / GRID;
+  const slab = Math.round(CS * 0.14);
+  const mull = Math.round(CS * 0.09);
 
-  // عمود عمودي (مولين) على يمين الوحدة — يتكرر فيصنع شبكة مستمرة
-  const mull = Math.round(S * 0.09);
-  b.fillStyle = wallDark;
-  b.fillRect(S - mull, 0, mull, S);
-  hh.fillStyle = "#bbbbbb";
-  hh.fillRect(S - mull, 0, mull, S);
+  for (let gy = 0; gy < GRID; gy++) {
+    for (let gx = 0; gx < GRID; gx++) {
+      const ox = gx * CS;
+      const oy = gy * CS;
 
-  // فتحة النافذة
-  const wx = Math.round(S * 0.1);
-  const wy = Math.round(S * 0.12);
-  const ww = S - mull - wx * 2;
-  const wh = S - slab - wy - Math.round(S * 0.1);
+      // بلاطة الطابق
+      b.fillStyle = wallDark;
+      b.fillRect(ox, oy + CS - slab, CS, slab);
+      b.fillStyle = "rgba(255,255,255,0.06)";
+      b.fillRect(ox, oy + CS - slab, CS, 2);
+      hh.fillStyle = "#c8c8c8";
+      hh.fillRect(ox, oy + CS - slab, CS, slab);
+      r.fillStyle = "#cccccc";
+      r.fillRect(ox, oy + CS - slab, CS, slab);
 
-  // عتبة/كورنيش حول الفتحة
-  b.fillStyle = "rgba(0,0,0,0.35)";
-  b.fillRect(wx - 5, wy - 5, ww + 10, wh + 10);
+      // عمود عمودي
+      b.fillStyle = wallDark;
+      b.fillRect(ox + CS - mull, oy, mull, CS);
+      hh.fillStyle = "#bbbbbb";
+      hh.fillRect(ox + CS - mull, oy, mull, CS);
 
-  const lit = rnd() > (style === "office" ? 0.42 : 0.55);
-  const warm = rnd() > 0.55;
-  const glass = lit
-    ? warm
-      ? "#f0c283"
-      : "#9dc6ee"
-    : "#12181f";
-  b.fillStyle = glass;
-  b.fillRect(wx, wy, ww, wh);
-  // تدرّج داخلي يوحي بعمق الغرفة
-  const gg = b.createLinearGradient(0, wy, 0, wy + wh);
-  gg.addColorStop(0, "rgba(255,255,255,0.18)");
-  gg.addColorStop(0.5, "rgba(0,0,0,0.12)");
-  gg.addColorStop(1, "rgba(0,0,0,0.4)");
-  b.fillStyle = gg;
-  b.fillRect(wx, wy, ww, wh);
+      // فتحة النافذة
+      const wx = ox + Math.round(CS * 0.1);
+      const wy = oy + Math.round(CS * 0.12);
+      const ww = CS - mull - Math.round(CS * 0.1) * 2;
+      const wh = CS - slab - Math.round(CS * 0.12) - Math.round(CS * 0.1);
 
-  if (lit) {
-    e.fillStyle = warm ? "#c98f45" : "#5c86b8";
-    e.fillRect(wx, wy, ww, wh);
-    // ستارة/ظل داخلي يقطع الانبعاث
-    e.fillStyle = "rgba(0,0,0,0.55)";
-    e.fillRect(wx, wy, ww, Math.round(wh * (0.15 + rnd() * 0.35)));
+      b.fillStyle = "rgba(0,0,0,0.35)";
+      b.fillRect(wx - 4, wy - 4, ww + 8, wh + 8);
+
+      const lit = rnd() > (style === "office" ? 0.42 : 0.55);
+      const warm = rnd() > 0.5;
+      b.fillStyle = lit ? (warm ? "#f0c283" : "#9dc6ee") : "#12181f";
+      b.fillRect(wx, wy, ww, wh);
+
+      const gg = b.createLinearGradient(0, wy, 0, wy + wh);
+      gg.addColorStop(0, "rgba(255,255,255,0.18)");
+      gg.addColorStop(0.5, "rgba(0,0,0,0.12)");
+      gg.addColorStop(1, "rgba(0,0,0,0.42)");
+      b.fillStyle = gg;
+      b.fillRect(wx, wy, ww, wh);
+
+      if (lit) {
+        e.fillStyle = warm ? "#c98f45" : "#5c86b8";
+        e.fillRect(wx, wy, ww, wh);
+        // ستارة تقطع الانبعاث بنِسب مختلفة لكل نافذة
+        e.fillStyle = "rgba(0,0,0,0.6)";
+        e.fillRect(wx, wy, ww, Math.round(wh * (0.1 + rnd() * 0.5)));
+        if (rnd() > 0.6) {
+          e.fillRect(wx, wy, Math.round(ww * (0.2 + rnd() * 0.4)), wh);
+        }
+      }
+
+      r.fillStyle = "#3a3a3a";
+      r.fillRect(wx, wy, ww, wh);
+      hh.fillStyle = "#4a4a4a";
+      hh.fillRect(wx, wy, ww, wh);
+
+      b.strokeStyle = "#20262c";
+      b.lineWidth = 2;
+      b.strokeRect(wx, wy, ww, wh);
+      b.beginPath();
+      b.moveTo(wx + ww / 2, wy);
+      b.lineTo(wx + ww / 2, wy + wh);
+      b.stroke();
+    }
   }
 
-  // الزجاج أنعم من الجدار
-  r.fillStyle = "#3a3a3a";
-  r.fillRect(wx, wy, ww, wh);
-  hh.fillStyle = "#4a4a4a";
-  hh.fillRect(wx, wy, ww, wh);
-  // إطار الزجاج
-  b.strokeStyle = "#20262c";
-  b.lineWidth = 3;
-  b.strokeRect(wx, wy, ww, wh);
-  b.beginPath();
-  b.moveTo(wx + ww / 2, wy);
-  b.lineTo(wx + ww / 2, wy + wh);
-  b.stroke();
 
   // خريطة نتوءات من الارتفاع
   const src = hh.getImageData(0, 0, S, S);
