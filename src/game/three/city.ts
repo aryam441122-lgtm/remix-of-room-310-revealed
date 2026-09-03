@@ -51,7 +51,7 @@ const cache = new Map<string, FacadeMaps>();
 
 /** تكستر واجهة واحدة (طابق × فتحة) — تتكرر أفقياً ورأسياً بلا حدود مرئية */
 function buildFacade(style: FacadeStyle, seed: number): FacadeMaps {
-  const S = 256;
+  const S = 384;
   const rnd = rng(seed);
   const base = cv(S, S);
   const emi = cv(S, S);
@@ -287,9 +287,9 @@ export function buildingMaterials(
 ): THREE.Material[] {
   const m = facade(style, seed);
   const key = `${style}-${seed}`;
-  const ry = Math.max(1, Math.round(height / MODULE_H));
-  const rxSide = Math.max(1, Math.round(depth / MODULE_W));
-  const rxFront = Math.max(1, Math.round(width / MODULE_W));
+  const ry = Math.max(1, Math.round(height / (MODULE_H * 3)));
+  const rxSide = Math.max(1, Math.round(depth / (MODULE_W * 3)));
+  const rxFront = Math.max(1, Math.round(width / (MODULE_W * 3)));
   const roof = roofMaterial(style);
   return [
     faceMaterial(m, key, rxSide, ry, 0, 0, emissive),
