@@ -261,7 +261,12 @@ function RoomWorld({ w }: { w: WorldDef }) {
         repeat={[4, 5]}
       />
       <Surf position={[0, 1.45, -5.4]} size={[9, 2.9, 0.2]} tex="wallpaper" tint={w.wall} repeat={[5, 2]} />
-      <Surf position={[-4.5, 1.45, 0]} size={[0.2, 2.9, 11]} tex="wallpaper" tint={w.wall} repeat={[6, 2]} />
+      {/* الجدار الأيسر مقسّم حول فتحة النافذة حتى تُرى المدينة المجسّمة فعلياً */}
+      <Surf position={[-4.5, 1.45, -4.35]} size={[0.2, 2.9, 2.3]} tex="wallpaper" tint={w.wall} repeat={[2, 2]} />
+      <Surf position={[-4.5, 1.45, 2.55]} size={[0.2, 2.9, 5.9]} tex="wallpaper" tint={w.wall} repeat={[4, 2]} />
+      <Surf position={[-4.5, 0.37, -1.8]} size={[0.2, 0.75, 2.8]} tex="wallpaper" tint={w.wall} repeat={[2, 1]} />
+      <Surf position={[-4.5, 2.62, -1.8]} size={[0.2, 0.55, 2.8]} tex="wallpaper" tint={w.wall} repeat={[2, 1]} />
+
       <Surf position={[4.5, 1.45, 0]} size={[0.2, 2.9, 11]} tex="wallpaper" tint={w.wall} repeat={[6, 2]} />
       <Surf position={[0, 1.45, 5.4]} size={[9, 2.9, 0.2]} tex="wallpaper" tint={w.wall} repeat={[5, 2]} />
       {/* وزرة خشبية أسفل الجدران */}
