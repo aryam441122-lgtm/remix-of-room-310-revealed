@@ -278,18 +278,20 @@ export function buildingMaterials(
   emissive = "#ffb35c",
 ): THREE.Material[] {
   const m = facade(style, seed);
+  const key = `${style}-${seed}`;
   const ry = Math.max(1, Math.round(height / MODULE_H));
   const rxSide = Math.max(1, Math.round(depth / MODULE_W));
   const rxFront = Math.max(1, Math.round(width / MODULE_W));
   const roof = roofMaterial(style);
   return [
-    faceMaterial(m, rxSide, ry, 0, 0, emissive),
-    faceMaterial(m, rxSide, ry, 0.5, 0, emissive),
+    faceMaterial(m, key, rxSide, ry, 0, 0, emissive),
+    faceMaterial(m, key, rxSide, ry, 0.5, 0, emissive),
     roof,
     roof,
-    faceMaterial(m, rxFront, ry, 0.25, 0, emissive),
-    faceMaterial(m, rxFront, ry, 0.75, 0, emissive),
+    faceMaterial(m, key, rxFront, ry, 0.25, 0, emissive),
+    faceMaterial(m, key, rxFront, ry, 0.75, 0, emissive),
   ];
+
 }
 
 /** خرسانة رصيف/شارع بسيطة بتفاصيل */
