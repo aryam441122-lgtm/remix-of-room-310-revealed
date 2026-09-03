@@ -490,7 +490,10 @@ export function surface(kind: TexKind, opts: SurfaceOpts = {}) {
     roughnessMap: clone(base.roughnessMap),
     normalMap: clone(base.normalMap),
     normalScale: new THREE.Vector2(0.9, 0.9),
-    color: new THREE.Color(opts.tint ?? "#ffffff"),
+    // التلوين يُمزج مع الأبيض حتى لا يطغى على تفاصيل التكستر
+    color: opts.tint
+      ? new THREE.Color("#ffffff").lerp(new THREE.Color(opts.tint), 0.72)
+      : new THREE.Color("#ffffff"),
     roughness: opts.roughness ?? base.roughness,
     metalness: opts.metalness ?? base.metalness,
   };

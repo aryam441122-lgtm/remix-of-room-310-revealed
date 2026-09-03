@@ -410,7 +410,7 @@ function CorridorWorld({ w }: { w: WorldDef }) {
 }
 
 function HallWorld({ w }: { w: WorldDef }) {
-  const cols = useMemo(() => [-6, -2, 2, 6], []);
+  const cols = useMemo(() => [-8.5, -5.5, 5.5, 8.5], []);
   const colMat = useMemo(
     () => new THREE.MeshStandardMaterial(surface("marble", { tint: w.wall, repeat: [2, 4] })),
     [w.wall],
@@ -772,16 +772,16 @@ export default function Scene3D({ place, shotIndex, speaker, closeup }: Scene3DP
     <Canvas
       shadows
       dpr={[1, 1.6]}
-      gl={{ antialias: true, powerPreference: "high-performance", toneMappingExposure: 1.1 }}
+      gl={{ antialias: true, powerPreference: "high-performance", toneMappingExposure: 0.95 }}
       camera={{ position: shot.pos, fov: shot.fov ?? 44, near: 0.05, far: 300 }}
       className="absolute inset-0"
     >
       <color attach="background" args={[w.fog]} />
       <fog attach="fog" args={[w.fog, w.fogNear * 2.2, w.fogFar * 2.2]} />
-      <ambientLight intensity={w.ambient * 3.2} color="#aec1da" />
-      <CameraFill color="#d6e0ee" intensity={showChar ? 18 : 32} />
-      <hemisphereLight intensity={w.ambient * 2.4} color="#8fa6c8" groundColor="#241d18" />
-      <directionalLight position={[3, 6, 5]} intensity={1.3} color="#cddcf2" />
+      <ambientLight intensity={w.ambient * 1.7} color="#aec1da" />
+      <CameraFill color="#d6e0ee" intensity={showChar ? 10 : 16} />
+      <hemisphereLight intensity={w.ambient * 1.3} color="#8fa6c8" groundColor="#241d18" />
+      <directionalLight position={[3, 6, 5]} intensity={0.8} color="#cddcf2" />
 
       <CameraRig shot={shot} shotKey={`${place}-${shotIndex}-${speaker ?? ""}-${closeup ? 1 : 0}`} />
 

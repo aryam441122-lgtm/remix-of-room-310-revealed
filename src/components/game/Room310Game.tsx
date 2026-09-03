@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { backgrounds, portraits } from "@/game/assets";
 import { characters } from "@/game/catalog";
 import { useGame } from "@/game/store";
 import { getScene } from "@/game/story";
-import type { Choice, Line, Scene, StoryState } from "@/game/types";
+import type { CharacterId, Choice, Line, Scene, StoryState } from "@/game/types";
 import { CaseFile } from "./CaseFile";
 import { Stage3D } from "./Stage3D";
 import { TitleSequence } from "./TitleSequence";
@@ -12,19 +11,6 @@ type Stage = "lines" | "inspect" | "afterInspect" | "choices" | "done";
 
 function visibleLines(lines: Line[], story: StoryState) {
   return lines.filter((l) => !l.requires || l.requires(story));
-}
-
-function Portrait({ who }: { who: string }) {
-  const src = portraits[who as keyof typeof portraits];
-  if (!src) return null;
-  return (
-    <img
-      src={src}
-      alt=""
-      aria-hidden
-      className="pointer-events-none absolute bottom-0 left-0 h-[68%] max-w-none object-contain opacity-95 drop-shadow-[0_0_40px_rgba(0,0,0,0.9)] md:h-[80%]"
-    />
-  );
 }
 
 export function Room310Game() {
@@ -221,12 +207,23 @@ export function Room310Game() {
     (stage === "inspect" ? 1 : 0) +
     (stage === "choices" ? 4 : 0);
 
+  const speaker =
+    showDialogue && current && current.who in characters && !current.stage
+      ? (current.who as CharacterId)
+      : undefined;
+
   return (
     <div
       className="film-grain relative h-dvh w-full overflow-hidden bg-black select-none"
       data-mood={scene.mood ?? "dark"}
     >
-      <Stage3D place={scene.bg} shotIndex={shotIndex} mood={scene.mood} />
+      <Stage3D
+        place={scene.bg}
+        shotIndex={shotIndex}
+        mood={scene.mood}
+        speaker={speaker}
+        closeup={!!detail}
+      />
       <div className="pointer-events-none absolute inset-0 vignette" />
       {(scene.mood === "rain" || scene.mood === "cold") && (
         <div className="rain-layer pointer-events-none absolute inset-0 opacity-20" />
@@ -234,7 +231,7 @@ export function Room310Game() {
       {red && <div className="pointer-events-none absolute inset-0 emergency-pulse" />}
       {flash && <div className="pointer-events-none absolute inset-0 z-50 bg-black" />}
 
-      {showDialogue && current && <Portrait who={current.who} />}
+
 
 
       {/* شريط علوي */}
