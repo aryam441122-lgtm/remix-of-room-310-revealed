@@ -598,20 +598,6 @@ function BasementWorld({ w }: { w: WorldDef }) {
 }
 
 function RooftopWorld({ w }: { w: WorldDef }) {
-  const city = useMemo(
-    () =>
-      Array.from({ length: 46 }).map(() => ({
-        x: (Math.random() - 0.5) * 90,
-        z: -18 - Math.random() * 55,
-        h: 4 + Math.random() * 26,
-        wd: 3 + Math.random() * 6,
-      })),
-    [],
-  );
-  const towerMat = useMemo(
-    () => new THREE.MeshStandardMaterial(surface("concrete", { tint: "#151a21", repeat: [2, 6] })),
-    [],
-  );
   return (
     <group>
       <Plane size={[26, 26]} tex="concrete" tint={w.floor} repeat={[14, 14]} />
@@ -624,23 +610,9 @@ function RooftopWorld({ w }: { w: WorldDef }) {
       <Surf position={[-6, 0.6, 4]} size={[2.4, 1.2, 2.4]} tex="rustmetal" repeat={[3, 2]} />
       <Surf position={[-2.5, 0.45, 7]} size={[1.6, 0.9, 1.6]} tex="metal" tint="#3a4149" repeat={[2, 2]} />
 
-      <CityView size={[130, 44]} position={[0, 12, -70]} intensity={0.7} seed={33} />
+      {/* مدينة مجسّمة: مبانٍ حقيقية بواجهات لكل اتجاه، بلا صور مسطّحة */}
+      <City3D seed={33} count={34} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
 
-      {city.map((b, i) => (
-        <group key={i}>
-          <mesh position={[b.x, b.h / 2 - 2, b.z]} material={towerMat}>
-            <boxGeometry args={[b.wd, b.h, b.wd]} />
-          </mesh>
-          <mesh position={[b.x, b.h / 2 - 2, b.z + b.wd / 2 + 0.02]}>
-            <planeGeometry args={[b.wd * 0.8, b.h * 0.85]} />
-            <meshStandardMaterial
-              color="#0b0f14"
-              emissive={i % 3 === 0 ? "#ffce8a" : "#7fa8ff"}
-              emissiveIntensity={0.24}
-            />
-          </mesh>
-        </group>
-      ))}
       <directionalLight position={[-10, 18, -8]} intensity={0.5} color="#8fb0ff" />
     </group>
   );
