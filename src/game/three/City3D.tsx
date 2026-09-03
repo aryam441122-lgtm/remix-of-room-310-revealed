@@ -93,7 +93,7 @@ export function City3D({
   });
 
   return (
-    <group position={position} scale={scale}>
+    <group position={position} rotation-y={rotation} scale={scale}>
       {streets && (
         <mesh rotation-x={-Math.PI / 2} position={[0, -0.02, -depth / 2]} receiveShadow material={pave}>
           <planeGeometry args={[spread * 1.8, depth * 1.6]} />
