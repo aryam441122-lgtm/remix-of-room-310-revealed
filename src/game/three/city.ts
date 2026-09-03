@@ -210,15 +210,21 @@ function clone(t: THREE.CanvasTexture, rx: number, ry: number, ox = 0, oy = 0) {
   return c;
 }
 
+const matCache = new Map<string, THREE.MeshStandardMaterial>();
+
 function faceMaterial(
   m: FacadeMaps,
+  key: string,
   rx: number,
   ry: number,
   ox: number,
   oy: number,
   emissive: string,
 ) {
-  return new THREE.MeshStandardMaterial({
+  const ck = `${key}|${rx}|${ry}|${ox}|${oy}|${emissive}`;
+  let mat = matCache.get(ck);
+  if (mat) return mat;
+  mat = new THREE.MeshStandardMaterial({
     map: clone(m.map, rx, ry, ox, oy),
     emissiveMap: clone(m.emissiveMap, rx, ry, ox, oy),
     emissive: new THREE.Color(emissive),
@@ -229,7 +235,10 @@ function faceMaterial(
     roughness: 0.78,
     metalness: 0.06,
   });
+  matCache.set(ck, mat);
+  return mat;
 }
+
 
 const roofCache = new Map<FacadeStyle, THREE.MeshStandardMaterial>();
 
