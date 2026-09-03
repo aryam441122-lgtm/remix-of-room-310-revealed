@@ -261,7 +261,12 @@ function RoomWorld({ w }: { w: WorldDef }) {
         repeat={[4, 5]}
       />
       <Surf position={[0, 1.45, -5.4]} size={[9, 2.9, 0.2]} tex="wallpaper" tint={w.wall} repeat={[5, 2]} />
-      <Surf position={[-4.5, 1.45, 0]} size={[0.2, 2.9, 11]} tex="wallpaper" tint={w.wall} repeat={[6, 2]} />
+      {/* الجدار الأيسر مقسّم حول فتحة النافذة حتى تُرى المدينة المجسّمة فعلياً */}
+      <Surf position={[-4.5, 1.45, -4.35]} size={[0.2, 2.9, 2.3]} tex="wallpaper" tint={w.wall} repeat={[2, 2]} />
+      <Surf position={[-4.5, 1.45, 2.55]} size={[0.2, 2.9, 5.9]} tex="wallpaper" tint={w.wall} repeat={[4, 2]} />
+      <Surf position={[-4.5, 0.37, -1.8]} size={[0.2, 0.75, 2.8]} tex="wallpaper" tint={w.wall} repeat={[2, 1]} />
+      <Surf position={[-4.5, 2.62, -1.8]} size={[0.2, 0.55, 2.8]} tex="wallpaper" tint={w.wall} repeat={[2, 1]} />
+
       <Surf position={[4.5, 1.45, 0]} size={[0.2, 2.9, 11]} tex="wallpaper" tint={w.wall} repeat={[6, 2]} />
       <Surf position={[0, 1.45, 5.4]} size={[9, 2.9, 0.2]} tex="wallpaper" tint={w.wall} repeat={[5, 2]} />
       {/* وزرة خشبية أسفل الجدران */}
@@ -426,15 +431,30 @@ function HallWorld({ w }: { w: WorldDef }) {
         rotation={[Math.PI / 2, 0, 0]}
         repeat={[8, 12]}
       />
-      <Surf position={[0, 3.5, -12]} size={[24, 7, 0.4]} tex="marble" tint={w.wall} repeat={[8, 3]} />
+      {/* الجدار الأمامي مقسّم حول واجهة زجاجية تُرى منها المدينة المجسّمة */}
+      <Surf position={[-9.75, 3.5, -12]} size={[4.5, 7, 0.4]} tex="marble" tint={w.wall} repeat={[2, 3]} />
+      <Surf position={[9.75, 3.5, -12]} size={[4.5, 7, 0.4]} tex="marble" tint={w.wall} repeat={[2, 3]} />
+      <Surf position={[0, 0.45, -12]} size={[15, 0.9, 0.4]} tex="marble" tint={w.wall} repeat={[6, 1]} />
+      <Surf position={[0, 6.65, -12]} size={[15, 0.7, 0.4]} tex="marble" tint={w.wall} repeat={[6, 1]} />
       <Surf position={[-11.8, 3.5, 0]} size={[0.4, 7, 40]} tex="marble" tint={w.wall} repeat={[12, 3]} />
       <Surf position={[11.8, 3.5, 0]} size={[0.4, 7, 40]} tex="marble" tint={w.wall} repeat={[12, 3]} />
 
-      {/* واجهة زجاجية على المدينة بدل صورة معلّقة */}
-      <CityView size={[15, 5.4]} position={[0, 3.6, -11.72]} intensity={0.8} seed={21} />
+      {/* زجاج الواجهة + المدينة الحقيقية خلفه */}
+      <mesh position={[0, 3.6, -11.9]}>
+        <planeGeometry args={[15, 5.4]} />
+        <meshPhysicalMaterial
+          color="#0d151d"
+          transparent
+          opacity={0.22}
+          roughness={0.05}
+          metalness={0.1}
+        />
+      </mesh>
+      <City3D seed={21} count={26} spread={120} depth={150} minH={10} maxH={48} position={[0, 0, -20]} />
       {[-5, 0, 5].map((x) => (
-        <Surf key={x} position={[x, 3.6, -11.66]} size={[0.12, 5.6, 0.1]} tex="metal" tint="#1b1f26" repeat={[1, 3]} />
+        <Surf key={x} position={[x, 3.6, -11.86]} size={[0.12, 5.6, 0.1]} tex="metal" tint="#1b1f26" repeat={[1, 3]} />
       ))}
+
 
       {cols.map((x) =>
         [-6, 0, 6].map((z) => (
@@ -593,20 +613,6 @@ function BasementWorld({ w }: { w: WorldDef }) {
 }
 
 function RooftopWorld({ w }: { w: WorldDef }) {
-  const city = useMemo(
-    () =>
-      Array.from({ length: 46 }).map(() => ({
-        x: (Math.random() - 0.5) * 90,
-        z: -18 - Math.random() * 55,
-        h: 4 + Math.random() * 26,
-        wd: 3 + Math.random() * 6,
-      })),
-    [],
-  );
-  const towerMat = useMemo(
-    () => new THREE.MeshStandardMaterial(surface("concrete", { tint: "#151a21", repeat: [2, 6] })),
-    [],
-  );
   return (
     <group>
       <Plane size={[26, 26]} tex="concrete" tint={w.floor} repeat={[14, 14]} />
@@ -619,23 +625,9 @@ function RooftopWorld({ w }: { w: WorldDef }) {
       <Surf position={[-6, 0.6, 4]} size={[2.4, 1.2, 2.4]} tex="rustmetal" repeat={[3, 2]} />
       <Surf position={[-2.5, 0.45, 7]} size={[1.6, 0.9, 1.6]} tex="metal" tint="#3a4149" repeat={[2, 2]} />
 
-      <CityView size={[130, 44]} position={[0, 12, -70]} intensity={0.7} seed={33} />
+      {/* مدينة مجسّمة: مبانٍ حقيقية بواجهات لكل اتجاه، بلا صور مسطّحة */}
+      <City3D seed={33} count={34} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
 
-      {city.map((b, i) => (
-        <group key={i}>
-          <mesh position={[b.x, b.h / 2 - 2, b.z]} material={towerMat}>
-            <boxGeometry args={[b.wd, b.h, b.wd]} />
-          </mesh>
-          <mesh position={[b.x, b.h / 2 - 2, b.z + b.wd / 2 + 0.02]}>
-            <planeGeometry args={[b.wd * 0.8, b.h * 0.85]} />
-            <meshStandardMaterial
-              color="#0b0f14"
-              emissive={i % 3 === 0 ? "#ffce8a" : "#7fa8ff"}
-              emissiveIntensity={0.24}
-            />
-          </mesh>
-        </group>
-      ))}
       <directionalLight position={[-10, 18, -8]} intensity={0.5} color="#8fb0ff" />
     </group>
   );
@@ -676,10 +668,13 @@ function DriveWorld({ w }: { w: WorldDef }) {
           </group>
         ))}
       </group>
-      <CityView size={[60, 22]} position={[0, 7, -46]} intensity={0.6} seed={5} />
-      {/* داخل السيارة: طبلون جلد */}
-      <Surf position={[0, 0.72, 1.3]} size={[3.2, 0.5, 1]} tex="leather" tint="#171a1f" repeat={[4, 1]} />
-      <Lamp position={[0.6, 0.95, 1.2]} color="#66e0c0" intensity={1.2} size={0.03} />
+      {/* مدينة مجسّمة حقيقية على جانبي الطريق */}
+      <City3D seed={5} count={30} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
+      {/* سيارة أخرى تسير في المسار المقابل */}
+      <Car3D position={[-5.2, 0, -26]} rotation={Math.PI} color="#2a2f36" spin />
+      {/* داخل السيارة: مقصورة كاملة */}
+      <CarInterior />
+
     </group>
   );
 }
