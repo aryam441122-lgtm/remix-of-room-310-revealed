@@ -40,6 +40,7 @@ export function City3D({
   minH = 10,
   maxH = 46,
   position = [0, 0, 0],
+  rotation = 0,
   scale = 1,
   streets = true,
 }: {
@@ -50,6 +51,7 @@ export function City3D({
   minH?: number;
   maxH?: number;
   position?: [number, number, number];
+  rotation?: number;
   scale?: number;
   streets?: boolean;
 }) {
@@ -91,7 +93,7 @@ export function City3D({
   });
 
   return (
-    <group position={position} scale={scale}>
+    <group position={position} rotation-y={rotation} scale={scale}>
       {streets && (
         <mesh rotation-x={-Math.PI / 2} position={[0, -0.02, -depth / 2]} receiveShadow material={pave}>
           <planeGeometry args={[spread * 1.8, depth * 1.6]} />

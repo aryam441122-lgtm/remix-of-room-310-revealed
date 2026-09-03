@@ -3,8 +3,10 @@ import { Bloom, EffectComposer, Noise, Vignette } from "@react-three/postprocess
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { CharacterId } from "@/game/types";
+import { Car3D, CarInterior } from "./Car3D";
 import { Character3D } from "./Character3D";
-import { cityNightTexture, surface, type TexKind } from "./textures";
+import { City3D } from "./City3D";
+import { surface, type TexKind } from "./textures";
 import { getWorld, type Shot, type WorldDef } from "./world";
 
 /* ------------------------------------------------------------------ */
@@ -193,32 +195,8 @@ function Plane({
   );
 }
 
-/** نافذة/أفق مدينة إجرائي — بلا أي صور معلّقة على الجدران */
-function CityView({
-  size,
-  position,
-  rotation,
-  intensity = 1,
-  seed = 7,
-}: {
-  size: [number, number];
-  position: [number, number, number];
-  rotation?: [number, number, number];
-  intensity?: number;
-  seed?: number;
-}) {
-  const tex = useMemo(() => cityNightTexture(seed), [seed]);
-  return (
-    <mesh position={position} rotation={rotation ?? [0, 0, 0]}>
-      <planeGeometry args={size} />
-      <meshBasicMaterial
-        map={tex}
-        toneMapped={false}
-        color={new THREE.Color(intensity, intensity, intensity)}
-      />
-    </mesh>
-  );
-}
+
+
 
 function Lamp({ position, color, intensity = 6, size = 0.09 }: {
   position: [number, number, number];
@@ -284,16 +262,25 @@ function RoomWorld({ w }: { w: WorldDef }) {
         />
       ))}
 
-      {/* نافذة على المدينة */}
+      {/* نافذة مفتوحة على مدينة مجسّمة حقيقية خارج المبنى */}
       <group>
-        <CityView
-          size={[3.4, 1.9]}
-          position={[-4.36, 1.6, -1.4]}
-          rotation={[0, Math.PI / 2, 0]}
-          intensity={0.85}
+        <City3D
           seed={w.vista === "room310b" ? 12 : 7}
+          count={22}
+          spread={90}
+          depth={130}
+          minH={10}
+          maxH={44}
+          position={[-9, -6, -1.4]}
+          rotation={Math.PI / 2}
         />
+        {/* زجاج النافذة */}
+        <mesh position={[-4.42, 1.6, -1.4]} rotation-y={Math.PI / 2}>
+          <planeGeometry args={[2.8, 1.6]} />
+          <meshPhysicalMaterial color="#0e161e" transparent opacity={0.18} roughness={0.05} />
+        </mesh>
         <Surf position={[-4.3, 1.6, -1.4]} size={[0.05, 2.05, 0.07]} tex="metal" tint="#20242a" repeat={[1, 2]} />
+
         <Surf position={[-4.3, 0.55, -1.4]} size={[0.14, 0.1, 3.6]} tex="darkwood" repeat={[3, 1]} />
         <rectAreaLight
           position={[-4.2, 1.6, -1.4]}
@@ -626,7 +613,7 @@ function RooftopWorld({ w }: { w: WorldDef }) {
       <Surf position={[-2.5, 0.45, 7]} size={[1.6, 0.9, 1.6]} tex="metal" tint="#3a4149" repeat={[2, 2]} />
 
       {/* مدينة مجسّمة: مبانٍ حقيقية بواجهات لكل اتجاه، بلا صور مسطّحة */}
-      <City3D seed={33} count={34} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
+      <City3D seed={33} count={26} spread={150} depth={190} minH={12} maxH={62} position={[0, -14, -16]} />
 
       <directionalLight position={[-10, 18, -8]} intensity={0.5} color="#8fb0ff" />
     </group>
@@ -649,7 +636,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
   });
   return (
     <group>
-      <Plane size={[26, 140]} tex="asphalt" tint={w.floor} repeat={[14, 70]} roughness={0.42} metalness={0.3} />
+      <Plane size={[26, 140]} tex="asphalt" tint={w.floor} repeat={[10, 52]} roughness={0.58} metalness={0.12} />
       <group ref={road}>
         {Array.from({ length: 24 }).map((_, i) => (
           <mesh key={i} position={[0, 0.01, -i * 2.5]} rotation-x={-Math.PI / 2}>
@@ -669,7 +656,7 @@ function DriveWorld({ w }: { w: WorldDef }) {
         ))}
       </group>
       {/* مدينة مجسّمة حقيقية على جانبي الطريق */}
-      <City3D seed={5} count={30} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
+      <City3D seed={5} count={22} spread={110} depth={150} minH={9} maxH={44} position={[0, 0, -18]} streets={false} />
       {/* سيارة أخرى تسير في المسار المقابل */}
       <Car3D position={[-5.2, 0, -26]} rotation={Math.PI} color="#2a2f36" spin />
       {/* داخل السيارة: مقصورة كاملة */}

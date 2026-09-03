@@ -227,6 +227,7 @@ export function CarInterior() {
   });
   const leather = useMemo(() => surface("leather", { tint: "#15181d", repeat: [3, 2] }), []);
   const cloth = useMemo(() => surface("fabric", { tint: "#1b1f25", repeat: [3, 3] }), []);
+  const roofCloth = useMemo(() => surface("fabric", { tint: "#0e1116", repeat: [1.2, 1.2] }), []);
   return (
     <group>
       {/* طبلون */}
@@ -287,7 +288,7 @@ export function CarInterior() {
       {/* سقف */}
       <mesh position={[0, 1.52, 0.3]}>
         <boxGeometry args={[2.7, 0.1, 2.8]} />
-        <meshStandardMaterial {...cloth} />
+        <meshStandardMaterial {...roofCloth} />
       </mesh>
     </group>
   );
