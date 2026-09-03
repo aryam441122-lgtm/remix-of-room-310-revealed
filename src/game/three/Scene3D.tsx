@@ -193,32 +193,8 @@ function Plane({
   );
 }
 
-/** نافذة/أفق مدينة إجرائي — بلا أي صور معلّقة على الجدران */
-function CityView({
-  size,
-  position,
-  rotation,
-  intensity = 1,
-  seed = 7,
-}: {
-  size: [number, number];
-  position: [number, number, number];
-  rotation?: [number, number, number];
-  intensity?: number;
-  seed?: number;
-}) {
-  const tex = useMemo(() => cityNightTexture(seed), [seed]);
-  return (
-    <mesh position={position} rotation={rotation ?? [0, 0, 0]}>
-      <planeGeometry args={size} />
-      <meshBasicMaterial
-        map={tex}
-        toneMapped={false}
-        color={new THREE.Color(intensity, intensity, intensity)}
-      />
-    </mesh>
-  );
-}
+
+
 
 function Lamp({ position, color, intensity = 6, size = 0.09 }: {
   position: [number, number, number];
