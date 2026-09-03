@@ -40,6 +40,7 @@ export function City3D({
   minH = 10,
   maxH = 46,
   position = [0, 0, 0],
+  rotation = 0,
   scale = 1,
   streets = true,
 }: {
@@ -50,6 +51,7 @@ export function City3D({
   minH?: number;
   maxH?: number;
   position?: [number, number, number];
+  rotation?: number;
   scale?: number;
   streets?: boolean;
 }) {
