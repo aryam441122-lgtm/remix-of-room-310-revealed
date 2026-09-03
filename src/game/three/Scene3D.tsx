@@ -3,8 +3,10 @@ import { Bloom, EffectComposer, Noise, Vignette } from "@react-three/postprocess
 import { Suspense, useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { CharacterId } from "@/game/types";
+import { Car3D, CarInterior } from "./Car3D";
 import { Character3D } from "./Character3D";
-import { cityNightTexture, surface, type TexKind } from "./textures";
+import { City3D } from "./City3D";
+import { surface, type TexKind } from "./textures";
 import { getWorld, type Shot, type WorldDef } from "./world";
 
 /* ------------------------------------------------------------------ */
